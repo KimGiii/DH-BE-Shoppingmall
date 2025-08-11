@@ -2,12 +2,15 @@ package shoppingmall.hanaro.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shoppingmall.hanaro.domain.*;
 import shoppingmall.hanaro.domain.User;
 import shoppingmall.hanaro.dto.OrderDetailResponseDto;
 import shoppingmall.hanaro.dto.OrderResponseDto;
+import shoppingmall.hanaro.dto.OrderSearchCondition;
 import shoppingmall.hanaro.exception.BusinessException;
 import shoppingmall.hanaro.exception.ErrorCode;
 import shoppingmall.hanaro.repository.OrderRepository;
@@ -83,5 +86,9 @@ public class OrderService {
         return orderRepository.findAll().stream()
                 .map(OrderResponseDto::from)
                 .collect(Collectors.toList());
+    }
+
+    public Page<OrderResponseDto> searchOrders(OrderSearchCondition condition, Pageable pageable) {
+        return orderRepository.search(condition, pageable);
     }
 }

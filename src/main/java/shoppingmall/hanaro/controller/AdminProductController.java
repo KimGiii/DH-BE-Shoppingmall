@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +15,6 @@ import shoppingmall.hanaro.dto.ProductCreateRequestDto;
 import shoppingmall.hanaro.dto.ProductResponseDto;
 import shoppingmall.hanaro.dto.ProductUpdateRequestDto;
 import shoppingmall.hanaro.service.ProductService;
-
-import java.io.IOException;
-import java.util.List;
 
 @Tag(name = "관리자 상품 관리", description = "관리자 상품 관리 API (인증 필요)")
 @RestController
@@ -32,10 +31,10 @@ public class AdminProductController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "전체 상품 조회", description = "모든 상품 목록을 조회합니다.")
+    @Operation(summary = "전체 상품 조회 (페이징 적용)", description = "모든 상품 목록을 페이징하여 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
-        List<ProductResponseDto> products = productService.findAllProducts();
+    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(Pageable pageable) {
+        Page<ProductResponseDto> products = productService.findAllProducts(pageable);
         return ResponseEntity.ok(products);
     }
 
