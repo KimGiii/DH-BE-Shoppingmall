@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import shoppingmall.hanaro.domain.Product;
 import shoppingmall.hanaro.dto.ProductCreateRequestDto;
 import shoppingmall.hanaro.dto.ProductResponseDto;
+import shoppingmall.hanaro.dto.ProductSearchCondition;
+import shoppingmall.hanaro.dto.ProductStockUpdateRequestDto;
 import shoppingmall.hanaro.dto.ProductUpdateRequestDto;
 import shoppingmall.hanaro.exception.BusinessException;
 import shoppingmall.hanaro.exception.ErrorCode;
@@ -46,6 +48,10 @@ public class ProductService {
                 .map(ProductResponseDto::from);
     }
 
+    public Page<ProductResponseDto> searchProducts(ProductSearchCondition condition, Pageable pageable) {
+        return productRepository.search(condition, pageable);
+    }
+
     public ProductResponseDto findProductById(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
@@ -68,6 +74,14 @@ public class ProductService {
         
         product.update(requestDto);
         log.info("[Product Log] Product Updated. ID: {}, Name: {}", product.getProductId(), product.getName());
+    }
+
+    @Transactional
+    public void updateStock(Long productId, ProductStockUpdateRequestDto requestDto) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
+        product.updateStock(requestDto.getStockQuantity());
+        log.info("[Product Log] Stock Updated. ID: {}, New Stock: {}", productId, requestDto.getStockQuantity());
     }
 
     @Transactional

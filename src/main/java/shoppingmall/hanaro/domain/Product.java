@@ -48,6 +48,10 @@ public class Product {
         this.description = requestDto.getDescription();
     }
 
+    public void updateStock(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
+
     //== 비즈니스 로직 ==//
     /**
      * 재고 증가

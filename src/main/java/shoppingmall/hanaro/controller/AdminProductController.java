@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import shoppingmall.hanaro.dto.ProductCreateRequestDto;
 import shoppingmall.hanaro.dto.ProductResponseDto;
+import shoppingmall.hanaro.dto.ProductStockUpdateRequestDto;
 import shoppingmall.hanaro.dto.ProductUpdateRequestDto;
 import shoppingmall.hanaro.service.ProductService;
 
@@ -50,6 +51,14 @@ public class AdminProductController {
     public ResponseEntity<Void> updateProduct(@PathVariable Long productId,
                                               @Valid @ModelAttribute ProductUpdateRequestDto requestDto) {
         productService.updateProduct(productId, requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "상품 재고 수정", description = "특정 상품의 재고 수량을 수정합니다.")
+    @PatchMapping("/{productId}/stock")
+    public ResponseEntity<Void> updateStock(@Parameter(description = "상품 ID") @PathVariable Long productId,
+                                              @Valid @RequestBody ProductStockUpdateRequestDto requestDto) {
+        productService.updateStock(productId, requestDto);
         return ResponseEntity.ok().build();
     }
 
