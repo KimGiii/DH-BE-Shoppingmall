@@ -34,7 +34,7 @@ class ProductServiceTest {
         // given
         ProductCreateRequestDto requestDto = new ProductCreateRequestDto(
                 "테스트 상품", 10000, 100, "테스트 상품 설명입니다.",
-                new MockMultipartFile("image", "test.jpg", "image/jpeg", new byte[0])
+                new MockMultipartFile("image", "test.jpg", "image/jpeg", "test image".getBytes())
         );
 
         when(fileService.uploadFile(any())).thenReturn("test_image_url.jpg");
@@ -44,5 +44,6 @@ class ProductServiceTest {
 
         // then
         verify(productRepository, times(1)).save(any(Product.class));
+        verify(fileService, times(1)).uploadFile(any());
     }
 }

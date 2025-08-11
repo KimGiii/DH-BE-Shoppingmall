@@ -59,13 +59,12 @@ public class OrderService {
         return order.getOrderId();
     }
 
-    public List<OrderResponseDto> findMyOrders(String loginId) {
+    public Page<OrderResponseDto> findMyOrders(String loginId, Pageable pageable) {
         User user = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        return orderRepository.findByUser_UserId(user.getUserId()).stream()
-                .map(OrderResponseDto::from)
-                .collect(Collectors.toList());
+        return orderRepository.findByUser_UserId(user.getUserId(), pageable)
+                .map(OrderResponseDto::from);
     }
 
     public OrderDetailResponseDto findOrderDetails(Long orderId) {
