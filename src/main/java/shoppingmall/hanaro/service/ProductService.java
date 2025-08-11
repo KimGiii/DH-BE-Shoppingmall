@@ -2,9 +2,10 @@ package shoppingmall.hanaro.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import shoppingmall.hanaro.domain.Product;
 import shoppingmall.hanaro.dto.ProductCreateRequestDto;
 import shoppingmall.hanaro.dto.ProductResponseDto;
@@ -14,8 +15,6 @@ import shoppingmall.hanaro.exception.ErrorCode;
 import shoppingmall.hanaro.repository.ProductRepository;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,10 +41,9 @@ public class ProductService {
         log.info("[Product Log] New Product Created. ID: {}, Name: {}", product.getProductId(), product.getName());
     }
 
-    public List<ProductResponseDto> findAllProducts() {
-        return productRepository.findAll().stream()
-                .map(ProductResponseDto::from)
-                .collect(Collectors.toList());
+    public Page<ProductResponseDto> findAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductResponseDto::from);
     }
 
     public ProductResponseDto findProductById(Long productId) {
