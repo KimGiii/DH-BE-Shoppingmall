@@ -60,4 +60,15 @@ public class UserController {
         TokenReissueResponseDto responseDto = userService.reissueToken(requestDto);
         return ResponseEntity.ok(responseDto);
     }
+
+    @Operation(summary = "로그아웃", description = "서버에서 Refresh Token을 삭제하여 로그아웃 처리합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "404", description = "리프레시 토큰을 찾을 수 없음")
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody TokenReissueRequestDto requestDto) {
+        userService.logout(requestDto);
+        return ResponseEntity.ok().build();
+    }
 }

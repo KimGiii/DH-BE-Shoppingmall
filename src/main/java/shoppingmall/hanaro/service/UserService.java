@@ -98,6 +98,13 @@ public class UserService {
                 .build();
     }
 
+    @Transactional
+    public void logout(TokenReissueRequestDto requestDto) {
+        UserToken userToken = userTokenRepository.findByRefreshToken(requestDto.getRefreshToken())
+                .orElseThrow(() -> new BusinessException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+        userTokenRepository.delete(userToken);
+    }
+
     public List<UserResponseDto> findAllUsers() {
         return userRepository.findAll().stream()
                 .map(UserResponseDto::from)
