@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import shoppingmall.hanaro.domain.Product;
 import shoppingmall.hanaro.dto.ProductCreateRequestDto;
 import shoppingmall.hanaro.repository.ProductRepository;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 

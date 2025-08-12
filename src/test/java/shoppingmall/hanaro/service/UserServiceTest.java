@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import shoppingmall.hanaro.domain.Address;
 import shoppingmall.hanaro.domain.User;
 import shoppingmall.hanaro.domain.UserToken;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import static org.mockito.BDDMockito.*;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 

@@ -156,3 +156,32 @@
 2025-08-12 16:53:05 [Test worker] INFO  business.order - [Order Step] Order entity created and saved. Order ID: 3
 2025-08-12 16:53:05 [Test worker] INFO  business.order - [Order Step] Cart cleared for user: testuser
 2025-08-12 16:53:05 [Test worker] INFO  business.order - [Order Success] New order created successfully. Order ID: 3, User: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Start] Start creating order from cart for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] User and cart validation complete for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Delivery info created for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] OrderItem list created. Item count: 2
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Order entity created and saved. Order ID: 1
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Cart cleared for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Success] New order created successfully. Order ID: 1, User: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Log] Order Canceled. Order ID: 1
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Start] Start creating order from cart for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] User and cart validation complete for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Delivery info created for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] OrderItem list created. Item count: 2
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Order entity created and saved. Order ID: 2
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Cart cleared for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Success] New order created successfully. Order ID: 2, User: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Start] Start creating order from cart for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] User and cart validation complete for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Delivery info created for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] OrderItem list created. Item count: 2
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Order entity created and saved. Order ID: 3
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Step] Cart cleared for user: testuser
+2025-08-12 17:21:13 [Test worker] INFO  business.order - [Order Success] New order created successfully. Order ID: 3, User: testuser
+2025-08-12 17:21:15 [Test worker] INFO  business.order - [Order Start] Start creating order from cart for user: testuser
+2025-08-12 17:21:15 [Test worker] INFO  business.order - [Order Step] User and cart validation complete for user: testuser
+2025-08-12 17:21:15 [Test worker] INFO  business.order - [Order Step] Delivery info created for user: testuser
+2025-08-12 17:21:15 [Test worker] INFO  business.order - [Order Step] OrderItem list created. Item count: 1
+2025-08-12 17:21:15 [Test worker] INFO  business.order - [Order Step] Order entity created and saved. Order ID: null
+2025-08-12 17:21:15 [Test worker] INFO  business.order - [Order Step] Cart cleared for user: testuser
+2025-08-12 17:21:15 [Test worker] INFO  business.order - [Order Success] New order created successfully. Order ID: null, User: testuser

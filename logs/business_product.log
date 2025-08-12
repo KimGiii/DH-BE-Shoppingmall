@@ -19,3 +19,8 @@
 2025-08-12 14:37:50 [Test worker] INFO  business.product - [Product Step] Image uploaded successfully. Image URL: test_image_url.jpg
 2025-08-12 14:37:50 [Test worker] INFO  business.product - [Product Step] Product entity created and saved. Product ID: null
 2025-08-12 14:37:50 [Test worker] INFO  business.product - [Product Success] New product created successfully. ID: null, Name: 테스트 상품
+2025-08-12 17:21:15 [Test worker] INFO  business.product - [Product Start] Start creating new product. Name: 테스트 상품
+2025-08-12 17:21:15 [Test worker] INFO  business.product - [Product Step] Attempting to upload image for product: 테스트 상품
+2025-08-12 17:21:15 [Test worker] INFO  business.product - [Product Step] Image uploaded successfully. Image URL: test_image_url.jpg
+2025-08-12 17:21:15 [Test worker] INFO  business.product - [Product Step] Product entity created and saved. Product ID: null
+2025-08-12 17:21:15 [Test worker] INFO  business.product - [Product Success] New product created successfully. ID: null, Name: 테스트 상품
