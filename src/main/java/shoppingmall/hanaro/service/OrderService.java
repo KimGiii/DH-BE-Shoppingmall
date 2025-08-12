@@ -1,7 +1,8 @@
 package shoppingmall.hanaro.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,18 +20,21 @@ import shoppingmall.hanaro.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OrderService {
+    private static final Logger orderLog = LoggerFactory.getLogger("business.order");
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
 
     @Transactional
     public Long createOrderFromCart(String loginId) {
+        orderLog.info("[Order Start] Start creating order from cart for user: {}", loginId);
+
         User user = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        orderLog.info("[Order Step] User and cart validation complete for user: {}", loginId);
 
         Cart cart = user.getCart();
         if (cart.getCartProducts().isEmpty()) {
@@ -39,6 +43,7 @@ public class OrderService {
 
         // 배송정보 생성
         Delivery delivery = Delivery.createDelivery(user.getAddress());
+        orderLog.info("[Order Step] Delivery info created for user: {}", loginId);
 
         // 주문상품 목록 생성
         List<OrderItem> orderItems = cart.getCartProducts().stream()
@@ -47,15 +52,18 @@ public class OrderService {
                         cartProduct.getProduct().getPrice(),
                         cartProduct.getQuantity()))
                 .collect(Collectors.toList());
+        orderLog.info("[Order Step] OrderItem list created. Item count: {}", orderItems.size());
 
         // 주문 생성
         Order order = Order.createOrder(user, delivery, orderItems.toArray(new OrderItem[0]));
         orderRepository.save(order);
+        orderLog.info("[Order Step] Order entity created and saved. Order ID: {}", order.getOrderId());
 
         // 장바구니 비우기
         cart.getCartProducts().clear();
+        orderLog.info("[Order Step] Cart cleared for user: {}", loginId);
 
-        log.info("[Order Log] New Order Created. Order ID: {}, User: {}", order.getOrderId(), loginId);
+        orderLog.info("[Order Success] New order created successfully. Order ID: {}, User: {}", order.getOrderId(), loginId);
         return order.getOrderId();
     }
 
@@ -78,7 +86,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
         order.cancel();
-        log.info("[Order Log] Order Canceled. Order ID: {}", orderId);
+        orderLog.info("[Order Log] Order Canceled. Order ID: {}", orderId);
     }
 
     public List<OrderResponseDto> findAllOrders() {

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 
@@ -34,9 +36,10 @@ public class Order {
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status; // ORDER, CANCEL
+    private OrderStatus status;
 
-    //== 연관관계 편의 메서드 ==//
+    private LocalDateTime statusUpdateTime;
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -54,42 +57,49 @@ public class Order {
     //== 생성 메서드 ==//
     public static Order createOrder(User user, Delivery delivery, OrderItem... orderItems) {
         Order order = new Order();
-        order.setUser(user);
-        order.setDelivery(delivery);
+        order.user = user;
+        order.delivery = delivery;
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
         }
-        order.status = OrderStatus.PAYMENT_COMPLETED; // 초기 상태 '결제완료'로 변경
+        order.status = OrderStatus.PAYMENT_COMPLETED; // 주문 생성 시 초기 상태
         order.orderDate = LocalDateTime.now();
+        order.statusUpdateTime = LocalDateTime.now(); // 주문 생성 시 상태 시간 초기화
         return order;
     }
 
-    public void updateStatus(OrderStatus status) {
-        this.status = status;
+    public void updateStatus(OrderStatus newStatus) {
+        this.status = newStatus;
+        this.statusUpdateTime = LocalDateTime.now();
+
+        // 주문 상태에 따라 배송 상태도 함께 변경
+        if (newStatus == OrderStatus.PREPARING_FOR_SHIPMENT) {
+            this.delivery.updateStatus(DeliveryStatus.PREPARING);
+        } else if (newStatus == OrderStatus.SHIPPED) {
+            this.delivery.updateStatus(DeliveryStatus.SHIPPED);
+        } else if (newStatus == OrderStatus.DELIVERED) {
+            this.delivery.updateStatus(DeliveryStatus.DELIVERED);
+        }
     }
 
-    //== 비즈니스 로직 ==//
-    /**
-     * 주문 취소
-     */
     public void cancel() {
-        if (status == OrderStatus.DELIVERED || status == OrderStatus.SHIPPED) {
+        if (delivery.getStatus() == DeliveryStatus.SHIPPED || delivery.getStatus() == DeliveryStatus.DELIVERED) {
             throw new IllegalStateException("이미 배송이 시작된 상품은 취소가 불가능합니다.");
         }
 
-        this.status = OrderStatus.CANCEL;
+        this.updateStatus(OrderStatus.CANCEL);
         for (OrderItem orderItem : orderItems) {
             orderItem.cancel();
         }
     }
 
-    //== 조회 로직 ==//
-    /**
-     * 전체 주문 가격 조회
-     */
     public int getTotalPrice() {
         return orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
                 .sum();
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        // 테스트용 메서드
     }
 }

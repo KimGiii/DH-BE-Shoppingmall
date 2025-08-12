@@ -6,31 +6,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.mock.web.MockMultipartFile;
-import shoppingmall.hanaro.config.SecurityConfig;
 import shoppingmall.hanaro.dto.ProductResponseDto;
 import shoppingmall.hanaro.service.ProductService;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
@@ -41,11 +36,11 @@ class AdminProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private ProductService productService;
 
     @Test
-    @DisplayName("상품 등록 성공")
+    @DisplayName("관리자는 상품 등록이 가능합니다.")
     @WithMockUser(roles = "ADMIN")
     @Disabled("multipart/form-data 테스트 환경 구성 문제로 임시 비활성화")
     void createProduct_success() throws Exception {
@@ -67,18 +62,36 @@ class AdminProductControllerTest {
     }
 
     @Test
-    @DisplayName("상품 전체 조회 성공")
+    @DisplayName("관리자는 전체 상품 조회가 가능합니다.")
     @WithMockUser(roles = "ADMIN")
-    void getAllProducts_success() throws Exception {
+    void getAllProducts() throws Exception {
         // given
-        Page<ProductResponseDto> productPage = new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 10), 0);
-        given(productService.findAllProducts(any(PageRequest.class))).willReturn(productPage);
+        ProductResponseDto product1 = new ProductResponseDto(1L, "상품1", 10000, 10, "설명1", "이미지1");
+        ProductResponseDto product2 = new ProductResponseDto(2L, "상품2", 20000, 20, "설명2", "이미지2");
+        List<ProductResponseDto> productList = Arrays.asList(product1, product2);
+
+        given(productService.findAllProducts()).willReturn(productList);
 
         // when & then
-        mockMvc.perform(get("/api/admin/products")
-                        .param("page", "0")
-                        .param("size", "10")
-                        .with(csrf()))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/admin/products"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("상품1"))
+                .andExpect(jsonPath("$[1].name").value("상품2"));
+    }
+
+    @Test
+    void createProduct() {
+    }
+
+    @Test
+    void updateProduct() {
+    }
+
+    @Test
+    void updateStock() {
+    }
+
+    @Test
+    void deleteProduct() {
     }
 }

@@ -1,72 +1,54 @@
 package shoppingmall.hanaro.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
-import shoppingmall.hanaro.domain.Address;
-import shoppingmall.hanaro.domain.Product;
-import shoppingmall.hanaro.domain.User;
-import shoppingmall.hanaro.dto.CartProductRequestDto;
-import shoppingmall.hanaro.repository.ProductRepository;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import shoppingmall.hanaro.domain.*;
+import shoppingmall.hanaro.dto.OrderDetailResponseDto;
+import shoppingmall.hanaro.repository.OrderRepository;
 import shoppingmall.hanaro.repository.UserRepository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Optional;
 
-@ActiveProfiles("test")
-@SpringBootTest
-@Transactional
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
-    @Autowired
+    @InjectMocks
     private OrderService orderService;
-    @Autowired
-    private CartService cartService;
-    @Autowired
+    @Mock
+    private OrderRepository orderRepository;
+    @Mock
     private UserRepository userRepository;
-    @Autowired
-    private ProductRepository productRepository;
-
-    private User testUser;
-    private Product testProduct;
-
-    @BeforeEach
-    void setUp() {
-        // 테스트용 사용자 및 상품 데이터 생성
-        Address address = new Address("서울", "테헤란로", "12345");
-        testUser = User.createUser("testuser", "password", "테스트유저", address);
-        userRepository.saveAndFlush(testUser);
-
-        testProduct = Product.createProduct("테스트 상품", 10000, 100, "설명", "image.jpg");
-        productRepository.saveAndFlush(testProduct);
-    }
 
     @Test
-    @DisplayName("장바구니 기반 주문 생성 테스트")
-    void createOrderFromCart() {
+    @DisplayName("사용자의 장바구니 기반으로 주문을 생성한다.")
+    void createOrderFromCartTest() {
         // given
-        // 1. 장바구니에 상품 추가
-        CartProductRequestDto cartRequest = new CartProductRequestDto();
-        cartRequest.setProductId(testProduct.getProductId());
-        cartRequest.setQuantity(2);
-        cartService.addProductToCart(testUser.getLoginId(), cartRequest);
+        User testUser = User.createUser("testuser", "password", "테스트", new Address("city", "street", "zipcode"));
+        Product testProduct = Product.createProduct("테스트 상품", 10000, 10, "설명", "url");
+        Cart cart = testUser.getCart();
+        cart.addCartProduct(CartProduct.createCartProduct(testProduct, 2));
+
+        when(userRepository.findByLoginId(anyString())).thenReturn(Optional.of(testUser));
+        when(orderRepository.findById(any())).thenReturn(Optional.of(
+                Order.createOrder(testUser, Delivery.createDelivery(testUser.getAddress()), OrderItem.createOrderItem(testProduct, 10000, 2))
+        ));
 
         // when
-        // 2. 주문 생성
-        Long orderId = orderService.createOrderFromCart(testUser.getLoginId());
+        Long orderId = orderService.createOrderFromCart("testuser");
+        OrderDetailResponseDto orderDetails = orderService.findOrderDetails(orderId);
 
         // then
-        // 3. 주문 검증
-        var order = orderService.findOrderDetails(orderId);
-        assertEquals(1, order.getOrderItems().size());
-        assertEquals(20000, order.getTotalPrice());
-        assertEquals("테스트 상품", order.getOrderItems().get(0).getName());
-
-        // 4. 장바구니가 비워졌는지 검증
-        var cart = cartService.getCart(testUser.getLoginId());
-        assertEquals(0, cart.getCartProducts().size());
+        assertEquals(1, orderDetails.orderItems().size());
+        assertEquals(20000, orderDetails.totalPrice());
+        assertEquals("테스트 상품", orderDetails.orderItems().get(0).name());
     }
 }

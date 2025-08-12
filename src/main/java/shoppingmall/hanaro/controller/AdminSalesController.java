@@ -16,7 +16,7 @@ import shoppingmall.hanaro.service.DailySalesService;
 import java.time.LocalDate;
 import java.util.List;
 
-@Tag(name = "관리자 매출 통계", description = "관리자 매출 통계 관리 API (인증 필요)")
+@Tag(name = "관리자 - 매출", description = "관리자 매출 통계 API")
 @RestController
 @RequestMapping("/api/admin/sales")
 @RequiredArgsConstructor

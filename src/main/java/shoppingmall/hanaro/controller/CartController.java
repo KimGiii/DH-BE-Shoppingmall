@@ -14,7 +14,7 @@ import shoppingmall.hanaro.service.CartService;
 
 import java.security.Principal;
 
-@Tag(name = "장바구니 관리", description = "사용자 장바구니 관리 API (인증 필요)")
+@Tag(name = "장바구니", description = "사용자 장바구니 관리 API")
 @RestController
 @RequestMapping("/api/user/cart")
 @RequiredArgsConstructor

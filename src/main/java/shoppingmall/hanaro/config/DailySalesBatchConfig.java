@@ -21,11 +21,15 @@ import shoppingmall.hanaro.repository.OrderRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableBatchProcessing
 @RequiredArgsConstructor
 public class DailySalesBatchConfig {
+
+    private static final Logger salesLogger = LoggerFactory.getLogger("business.sales");
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
@@ -59,6 +63,8 @@ public class DailySalesBatchConfig {
             int totalSales = orders.stream()
                     .mapToInt(Order::getTotalPrice)
                     .sum();
+
+            salesLogger.info("일일 총 매출: {}", totalSales);
 
             DailySales dailySales = DailySales.create(yesterday, totalSales);
             dailySalesRepository.save(dailySales);

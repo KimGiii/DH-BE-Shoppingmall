@@ -1,0 +1,21 @@
+2025-08-12 11:11:46 [http-nio-8080-exec-3] INFO  business.product - [Product Start] Start creating new product. Name: 블루베리
+2025-08-12 11:11:46 [http-nio-8080-exec-3] INFO  business.product - [Product Step] Attempting to upload image for product: 블루베리
+2025-08-12 11:11:46 [http-nio-8080-exec-3] INFO  business.product - [Product Step] Image uploaded successfully. Image URL: /upload/2025/08/12/a83c4fc5-a202-4101-9984-a59c4fd7e48b.jpeg
+2025-08-12 11:11:46 [http-nio-8080-exec-3] INFO  business.product - [Product Step] Product entity created and saved. Product ID: 5
+2025-08-12 11:11:46 [http-nio-8080-exec-3] INFO  business.product - [Product Success] New product created successfully. ID: 5, Name: 블루베리
+2025-08-12 13:37:26 [http-nio-8080-exec-8] INFO  business.product - [Product Start] Start updating product. ID: 1
+2025-08-12 13:37:26 [http-nio-8080-exec-8] INFO  business.product - [Product Step] Found product to update. ID: 1
+2025-08-12 13:37:26 [http-nio-8080-exec-8] INFO  business.product - [Product Step] Attempting to upload new image for product: 1
+2025-08-12 13:37:26 [http-nio-8080-exec-8] INFO  business.product - [Product Step] New image uploaded successfully. Image URL: /upload/2025/08/12/23d7aee7-0c63-45ae-bd3b-4567c7f10cee.jpeg
+2025-08-12 13:37:26 [http-nio-8080-exec-8] INFO  business.product - [Product Step] Product entity updated.
+2025-08-12 13:37:26 [http-nio-8080-exec-8] INFO  business.product - [Product Success] Product updated successfully. ID: 1, Name: 풋사과
+2025-08-12 14:10:23 [Test worker] INFO  business.product - [Product Start] Start creating new product. Name: 테스트 상품
+2025-08-12 14:10:23 [Test worker] INFO  business.product - [Product Step] Attempting to upload image for product: 테스트 상품
+2025-08-12 14:10:23 [Test worker] INFO  business.product - [Product Step] Image uploaded successfully. Image URL: test_image_url.jpg
+2025-08-12 14:10:23 [Test worker] INFO  business.product - [Product Step] Product entity created and saved. Product ID: null
+2025-08-12 14:10:23 [Test worker] INFO  business.product - [Product Success] New product created successfully. ID: null, Name: 테스트 상품
+2025-08-12 14:37:50 [Test worker] INFO  business.product - [Product Start] Start creating new product. Name: 테스트 상품
+2025-08-12 14:37:50 [Test worker] INFO  business.product - [Product Step] Attempting to upload image for product: 테스트 상품
+2025-08-12 14:37:50 [Test worker] INFO  business.product - [Product Step] Image uploaded successfully. Image URL: test_image_url.jpg
+2025-08-12 14:37:50 [Test worker] INFO  business.product - [Product Step] Product entity created and saved. Product ID: null
+2025-08-12 14:37:50 [Test worker] INFO  business.product - [Product Success] New product created successfully. ID: null, Name: 테스트 상품

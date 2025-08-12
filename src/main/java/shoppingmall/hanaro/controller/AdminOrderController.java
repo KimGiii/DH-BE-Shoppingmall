@@ -13,9 +13,7 @@ import shoppingmall.hanaro.dto.OrderResponseDto;
 import shoppingmall.hanaro.dto.OrderSearchCondition;
 import shoppingmall.hanaro.service.OrderService;
 
-import java.util.List;
-
-@Tag(name = "관리자 주문 관리", description = "관리자 주문 관리 API (인증 필요)")
+@Tag(name = "관리자 주문 관리", description = "관리자 주문 관리 API")
 @RestController
 @RequestMapping("/api/admin/orders")
 @RequiredArgsConstructor

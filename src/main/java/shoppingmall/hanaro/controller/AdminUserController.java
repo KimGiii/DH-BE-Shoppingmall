@@ -11,7 +11,7 @@ import shoppingmall.hanaro.service.UserService;
 
 import java.util.List;
 
-@Tag(name = "관리자 회원 관리", description = "관리자 회원 관리 API (인증 필요)")
+@Tag(name = "관리자 - 회원", description = "관리자 회원 관리 API")
 @RestController
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor

@@ -23,15 +23,21 @@ public class Delivery {
     @Embedded
     private Address address;
 
-    //== 연관관계 편의 메서드 ==//
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status;
+
     public void setOrder(Order order) {
         this.order = order;
     }
 
-    //== 생성 메서드 ==//
     public static Delivery createDelivery(Address address) {
         Delivery delivery = new Delivery();
         delivery.address = address;
+        delivery.status = DeliveryStatus.PREPARING; // 초기 상태: 배송 준비
         return delivery;
+    }
+
+    public void updateStatus(DeliveryStatus status) {
+        this.status = status;
     }
 }

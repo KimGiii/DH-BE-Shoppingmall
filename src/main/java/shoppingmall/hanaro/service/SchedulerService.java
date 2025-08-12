@@ -1,6 +1,8 @@
 package shoppingmall.hanaro.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SchedulerService {
 
+    private static final Logger log = LoggerFactory.getLogger(SchedulerService.class);
     private final OrderRepository orderRepository;
 
     /**
@@ -28,19 +31,37 @@ public class SchedulerService {
     public void autoUpdateOrderStatus() {
         LocalDateTime now = LocalDateTime.now();
 
-        // 결제 완료 후 5분이 지난 주문 -> 배송 준비중으로 변경
-        List<Order> paymentCompletedOrders = orderRepository.findAllByStatusAndOrderDateBefore(
+        // 결제 완료 상태가 된 후 5분이 지난 주문 -> 배송 준비중으로 변경
+        List<Order> paymentCompletedOrders = orderRepository.findAllByStatusAndStatusUpdateTimeBefore(
                 OrderStatus.PAYMENT_COMPLETED, now.minusMinutes(5));
-        paymentCompletedOrders.forEach(order -> order.updateStatus(OrderStatus.PREPARING_FOR_SHIPMENT));
+        paymentCompletedOrders.forEach(order -> {
+            if (order.getDelivery() != null) {
+                order.updateStatus(OrderStatus.PREPARING_FOR_SHIPMENT);
+            } else {
+                log.warn("Order ID {} has no delivery info.", order.getOrderId());
+            }
+        });
 
-        // 배송 준비중 후 15분이 지난 주문 -> 배송중으로 변경
-        List<Order> preparingOrders = orderRepository.findAllByStatusAndOrderDateBefore(
+        // 배송 준비중 상태가 된 후 15분이 지난 주문 -> 배송중으로 변경
+        List<Order> preparingOrders = orderRepository.findAllByStatusAndStatusUpdateTimeBefore(
                 OrderStatus.PREPARING_FOR_SHIPMENT, now.minusMinutes(15));
-        preparingOrders.forEach(order -> order.updateStatus(OrderStatus.SHIPPED));
+        preparingOrders.forEach(order -> {
+            if (order.getDelivery() != null) {
+                order.updateStatus(OrderStatus.SHIPPED);
+            } else {
+                log.warn("Order ID {} has no delivery info.", order.getOrderId());
+            }
+        });
 
-        // 배송중 후 1시간이 지난 주문 -> 배송 완료로 변경
-        List<Order> shippedOrders = orderRepository.findAllByStatusAndOrderDateBefore(
+        // 배송중 상태가 된 후 1시간이 지난 주문 -> 배송 완료로 변경
+        List<Order> shippedOrders = orderRepository.findAllByStatusAndStatusUpdateTimeBefore(
                 OrderStatus.SHIPPED, now.minusHours(1));
-        shippedOrders.forEach(order -> order.updateStatus(OrderStatus.DELIVERED));
+        shippedOrders.forEach(order -> {
+            if (order.getDelivery() != null) {
+                order.updateStatus(OrderStatus.DELIVERED);
+            } else {
+                log.warn("Order ID {} has no delivery info.", order.getOrderId());
+            }
+        });
     }
 }

@@ -27,7 +27,6 @@ public class OrderItem {
 
     private int quantity; // 주문 수량
 
-    //== 생성 메서드 ==//
     public static OrderItem createOrderItem(Product product, int orderPrice, int quantity) {
         OrderItem orderItem = new OrderItem();
         orderItem.product = product;
@@ -38,23 +37,14 @@ public class OrderItem {
         return orderItem;
     }
 
-    //== 비즈니스 로직 ==//
-    /**
-     * 주문 취소
-     */
     public void cancel() {
         getProduct().addStock(quantity); // 재고 수량 원복
     }
 
-    //== 조회 로직 ==//
-    /**
-     * 주문상품 전체 가격 조회
-     */
     public int getTotalPrice() {
         return getOrderPrice() * getQuantity();
     }
 
-    //== 연관관계 편의 메서드 ==//
     public void setOrder(Order order) {
         this.order = order;
     }

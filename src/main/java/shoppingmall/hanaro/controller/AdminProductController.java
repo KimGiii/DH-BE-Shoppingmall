@@ -5,19 +5,18 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import shoppingmall.hanaro.dto.ProductCreateRequestDto;
 import shoppingmall.hanaro.dto.ProductResponseDto;
 import shoppingmall.hanaro.dto.ProductStockUpdateRequestDto;
 import shoppingmall.hanaro.dto.ProductUpdateRequestDto;
 import shoppingmall.hanaro.service.ProductService;
 
-@Tag(name = "관리자 상품 관리", description = "관리자 상품 관리 API (인증 필요)")
+import java.util.List;
+
+@Tag(name = "관리자 - 상품", description = "관리자 상품 관리 API")
 @RestController
 @RequestMapping("/api/admin/products")
 @RequiredArgsConstructor
@@ -32,10 +31,10 @@ public class AdminProductController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "전체 상품 조회 (페이징 적용)", description = "모든 상품 목록을 페이징하여 조회합니다.")
+    @Operation(summary = "전체 상품 조회", description = "판매 중인 모든 상품 목록을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(Pageable pageable) {
-        Page<ProductResponseDto> products = productService.findAllProducts(pageable);
+    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
+        List<ProductResponseDto> products = productService.findAllProducts();
         return ResponseEntity.ok(products);
     }
 
@@ -57,7 +56,7 @@ public class AdminProductController {
     @Operation(summary = "상품 재고 수정", description = "특정 상품의 재고 수량을 수정합니다.")
     @PatchMapping("/{productId}/stock")
     public ResponseEntity<Void> updateStock(@Parameter(description = "상품 ID") @PathVariable Long productId,
-                                              @Valid @RequestBody ProductStockUpdateRequestDto requestDto) {
+                                            @Valid @RequestBody ProductStockUpdateRequestDto requestDto) {
         productService.updateStock(productId, requestDto);
         return ResponseEntity.ok().build();
     }

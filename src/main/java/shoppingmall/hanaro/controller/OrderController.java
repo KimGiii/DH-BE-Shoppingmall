@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -11,11 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shoppingmall.hanaro.dto.OrderDetailResponseDto;
 import shoppingmall.hanaro.dto.OrderResponseDto;
+import shoppingmall.hanaro.dto.PageResponseDto;
 import shoppingmall.hanaro.service.OrderService;
 
 import java.security.Principal;
 
-@Tag(name = "주문 관리", description = "사용자 주문 관리 API (인증 필요)")
+@Tag(name = "주문", description = "사용자 주문 관리 API")
 @RestController
 @RequestMapping("/api/user/orders")
 @RequiredArgsConstructor
@@ -30,11 +32,12 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderId);
     }
 
-    @Operation(summary = "내 주문 목록 조회 (페이징 적용)", description = "현재 로그인된 사용자의 모든 주문 목록을 페이징하여 조회합니다.")
+    @Operation(summary = "내 주문 목록 조회", description = "현재 로그인된 사용자의 모든 주문 목록을 페이징하여 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<OrderResponseDto>> getMyOrders(Principal principal, Pageable pageable) {
-        Page<OrderResponseDto> myOrders = orderService.findMyOrders(principal.getName(), pageable);
-        return ResponseEntity.ok(myOrders);
+    public ResponseEntity<PageResponseDto<OrderResponseDto>> getMyOrders(Principal principal, @ParameterObject Pageable pageable) {
+        Page<OrderResponseDto> myOrdersPage = orderService.findMyOrders(principal.getName(), pageable);
+        PageResponseDto<OrderResponseDto> response = new PageResponseDto<>(myOrdersPage);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "주문 상세 조회", description = "특정 주문의 상세 정보를 조회합니다.")

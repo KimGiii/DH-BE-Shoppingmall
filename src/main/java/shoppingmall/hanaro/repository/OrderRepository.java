@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
     Page<Order> findByUser_UserId(Long userId, Pageable pageable);
-    List<Order> findAllByStatusAndOrderDateBefore(OrderStatus status, LocalDateTime orderDate);
+    List<Order> findAllByStatusAndStatusUpdateTimeBefore(OrderStatus status, LocalDateTime statusUpdateTime);
     List<Order> findAllByOrderDateBetweenAndStatusNot(LocalDateTime start, LocalDateTime end, OrderStatus status);
 }

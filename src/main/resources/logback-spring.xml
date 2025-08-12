@@ -13,6 +13,9 @@
     <!-- Application Log Rolling File Appender -->
     <appender name="FILE_APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS_PATH}/app.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOGS_PATH}/app.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
@@ -46,6 +49,18 @@
         </encoder>
     </appender>
 
+    <!-- Business Sales Log Rolling File Appender -->
+    <appender name="FILE_SALES" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_PATH}/business_sales.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_PATH}/business_sales.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- Business Loggers -->
     <logger name="business.product" level="INFO" additivity="false">
         <appender-ref ref="FILE_PRODUCT"/>
@@ -53,6 +68,10 @@
 
     <logger name="business.order" level="INFO" additivity="false">
         <appender-ref ref="FILE_ORDER"/>
+    </logger>
+
+    <logger name="business.sales" level="INFO" additivity="false">
+        <appender-ref ref="FILE_SALES"/>
     </logger>
 
     <!-- Root Logger -->

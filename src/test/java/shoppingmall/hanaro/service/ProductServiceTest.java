@@ -29,8 +29,8 @@ class ProductServiceTest {
     private FileService fileService;
 
     @Test
-    @DisplayName("상품 등록 성공")
-    void createProduct_success() throws IOException {
+    @DisplayName("관리자는 상품을 등록한다.")
+    void createProduct() throws IOException {
         // given
         ProductCreateRequestDto requestDto = new ProductCreateRequestDto(
                 "테스트 상품", 10000, 100, "테스트 상품 설명입니다.",

@@ -1,30 +1,21 @@
 package shoppingmall.hanaro.dto;
 
 import lombok.Builder;
-import lombok.Getter;
 import shoppingmall.hanaro.domain.OrderItem;
 
-@Getter
-public class OrderItemDto {
-    private String name;
-    private int quantity;
-    private int orderPrice;
-    private String imageUrl;
-
-    @Builder
-    public OrderItemDto(String name, int quantity, int orderPrice, String imageUrl) {
-        this.name = name;
-        this.quantity = quantity;
-        this.orderPrice = orderPrice;
-        this.imageUrl = imageUrl;
-    }
-
+@Builder
+public record OrderItemDto(
+        String name,
+        int quantity,
+        int orderPrice,
+        String imageUrl
+) {
     public static OrderItemDto from(OrderItem orderItem) {
-        return OrderItemDto.builder()
-                .name(orderItem.getProduct().getName())
-                .quantity(orderItem.getQuantity())
-                .orderPrice(orderItem.getOrderPrice())
-                .imageUrl(orderItem.getProduct().getImageUrl())
-                .build();
+        return new OrderItemDto(
+                orderItem.getProduct().getName(),
+                orderItem.getQuantity(),
+                orderItem.getOrderPrice(),
+                orderItem.getProduct().getImageUrl()
+        );
     }
 }

@@ -1,13 +1,12 @@
 package shoppingmall.hanaro.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import shoppingmall.hanaro.dto.ProductUpdateRequestDto;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
@@ -41,11 +40,11 @@ public class Product {
         return product;
     }
 
-    public void update(ProductUpdateRequestDto requestDto) {
-        this.name = requestDto.getName();
-        this.price = requestDto.getPrice();
-        this.stockQuantity = requestDto.getStockQuantity();
-        this.description = requestDto.getDescription();
+    public void update(String name, int price, int stockQuantity, String description) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.description = description;
     }
 
     public void updateStock(int stockQuantity) {
@@ -53,6 +52,7 @@ public class Product {
     }
 
     //== 비즈니스 로직 ==//
+
     /**
      * 재고 증가
      */
@@ -66,7 +66,6 @@ public class Product {
     public void removeStock(int quantity) {
         int restStock = this.stockQuantity - quantity;
         if (restStock < 0) {
-            // TODO: 재고 부족 예외 처리
             throw new IllegalStateException("need more stock");
         }
         this.stockQuantity = restStock;

@@ -14,8 +14,8 @@ public class OrderResponseDto {
     private LocalDateTime orderDate;
     private OrderStatus orderStatus;
     private int totalPrice;
-    private String representativeImage; // 대표 이미지
-    private String representativeProductName; // 대표 상품명
+    private String representativeImage;
+    private String representativeProductName;
 
     @Builder
     public OrderResponseDto(Long orderId, LocalDateTime orderDate, OrderStatus orderStatus, int totalPrice, String representativeImage, String representativeProductName) {

@@ -12,14 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shoppingmall.hanaro.dto.TokenReissueRequestDto;
-import shoppingmall.hanaro.dto.TokenReissueResponseDto;
-import shoppingmall.hanaro.dto.UserLoginRequestDto;
-import shoppingmall.hanaro.dto.UserLoginResponseDto;
-import shoppingmall.hanaro.dto.UserSignupRequestDto;
+import shoppingmall.hanaro.dto.*;
 import shoppingmall.hanaro.service.UserService;
 
-@Tag(name = "회원", description = "회원 API")
+@Tag(name = "사용자 인증", description = "회원가입, 로그인, 토큰 재발급 API")
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor

@@ -15,8 +15,10 @@ import shoppingmall.hanaro.dto.ProductResponseDto;
 import shoppingmall.hanaro.dto.ProductSearchCondition;
 import shoppingmall.hanaro.service.ProductService;
 
+import java.util.List;
 
-@Tag(name = "상품 조회", description = "상품 조회 API")
+
+@Tag(name = "상품", description = "사용자 상품 조회 API")
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -24,10 +26,10 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "전체 상품 조회 (페이징 적용)", description = "판매 중인 모든 상품 목록을 페이징하여 조회합니다.")
+    @Operation(summary = "전체 상품 조회", description = "판매 중인 모든 상품 목록을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(Pageable pageable) {
-        Page<ProductResponseDto> products = productService.findAllProducts(pageable);
+    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
+        List<ProductResponseDto> products = productService.findAllProducts();
         return ResponseEntity.ok(products);
     }
 
@@ -38,7 +40,7 @@ public class ProductController {
         return ResponseEntity.ok(results);
     }
 
-    @Operation(summary = "특정 상품 조회", description = "ID로 특정 상품의 상세 정보를 조회합니다.")
+    @Operation(summary = "상품 상세 조회", description = "ID로 특정 상품의 상세 정보를 조회합니다.")
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponseDto> getProductById(@Parameter(description = "상품 ID") @PathVariable Long productId) {
         ProductResponseDto product = productService.findProductById(productId);

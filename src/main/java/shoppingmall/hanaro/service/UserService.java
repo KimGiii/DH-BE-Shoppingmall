@@ -35,25 +35,33 @@ public class UserService {
     @Transactional
     public void signup(UserSignupRequestDto requestDto) {
         // ID 중복 검사
-        userRepository.findByLoginId(requestDto.getLoginId()).ifPresent(user -> {
+        userRepository.findByLoginId(requestDto.loginId()).ifPresent(user -> {
             throw new BusinessException(ErrorCode.LOGIN_INPUT_INVALID); // TODO: 더 적절한 에러코드로 변경
         });
 
         // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        String encodedPassword = passwordEncoder.encode(requestDto.password());
 
-        Address address = new Address(requestDto.getCity(), requestDto.getStreet(), requestDto.getZipcode());
+        Address address = new Address(requestDto.city(), requestDto.street(), requestDto.zipcode());
 
-        User user = User.createUser(requestDto.getLoginId(), encodedPassword, requestDto.getName(), address);
+        User user = User.createUser(requestDto.loginId(), encodedPassword, requestDto.name(), address);
         userRepository.save(user);
     }
 
     @Transactional
     public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
-        User user = userRepository.findByLoginId(requestDto.getLoginId())
+        User user = userRepository.findByLoginId(requestDto.loginId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+        // ===== 디버깅 로그 =====
+        System.out.println("====== LOGIN DEBUGGING (ATTEMPT 2) ======");
+        System.out.println("Input Password: " + requestDto.password());
+        System.out.println("DB Encoded Password: " + user.getPassword());
+        boolean matches = passwordEncoder.matches(requestDto.password(), user.getPassword());
+        System.out.println("Password Matches: " + matches);
+        System.out.println("=========================================");
+
+        if (!matches) {
             throw new BusinessException(ErrorCode.LOGIN_INPUT_INVALID);
         }
 
